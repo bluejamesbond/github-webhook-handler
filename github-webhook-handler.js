@@ -5,7 +5,7 @@ const EventEmitter = require('events').EventEmitter
 
 
 function signBlob (key, blob) {
-  return 'sha1=' + crypto.createHmac('sha1', key).update(blob).digest('hex')
+  return 'sha1=' + crypto.createHmac('sha1', key).update(new Buffer(blob, 'utf-8')).digest('hex')
 }
 
 
