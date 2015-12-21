@@ -11,13 +11,7 @@ function signBlob (key, blob) {
 
 function create (options) {
   if (typeof options != 'object')
-    throw new TypeError('must provide an options object')
-
-  if (typeof options.path != 'string')
-    throw new TypeError('must provide a \'path\' option')
-
-  if (typeof options.secret != 'string')
-    throw new TypeError('must provide a \'secret\' option')
+    options = {}
 
   // make it an EventEmitter, sort of
   handler.__proto__ = EventEmitter.prototype
@@ -42,7 +36,7 @@ function create (options) {
       , event = req.headers['x-github-event']
       , id    = req.headers['x-github-delivery']
 
-    if (!options.ignoreSignature && !sig)
+    if (!options.secret && !sig)
       return hasError('No X-Hub-Signature found on request')
 
     if (!event)
@@ -58,7 +52,7 @@ function create (options) {
 
       var obj
 
-      if (!options.ignoreSignature && sig !== signBlob(options.secret, data))
+      if (!options.secret && sig !== signBlob(options.secret, data))
         return hasError('X-Hub-Signature does not match blob signature')
 
       try {
