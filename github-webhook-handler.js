@@ -36,7 +36,7 @@ function create (options) {
       , event = req.headers['x-github-event']
       , id    = req.headers['x-github-delivery']
 
-    if (!options.secret && !sig)
+    if (options.secret && !sig)
       return hasError('No X-Hub-Signature found on request')
 
     if (!event)
@@ -52,7 +52,7 @@ function create (options) {
 
       var obj
 
-      if (!options.secret && sig !== signBlob(options.secret, data))
+      if (options.secret && sig !== signBlob(options.secret, data))
         return hasError('X-Hub-Signature does not match blob signature')
 
       try {
